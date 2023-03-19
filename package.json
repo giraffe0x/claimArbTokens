@@ -1,0 +1,19 @@
+{
+  "name": "claimarbtokens",
+  "version": "1.0.0",
+  "description": "JS script to help compromised accounts claim ARB airdrop",
+  "main": "claim.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chewonithard/claimArbTokens.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chewonithard/claimArbTokens/issues"
+  },
+  "homepage": "https://github.com/chewonithard/claimArbTokens#readme"
+}

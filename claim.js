@@ -61,7 +61,7 @@ async function execute() {
   };
   // transfer arb tokens to safe wallet
   const tx2 = {
-      to: claimContract.getAddress(),
+      to: tokenContract.getAddress(),
       data: functionSignature2,
       nonce: 0
     };

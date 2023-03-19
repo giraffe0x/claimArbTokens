@@ -32,7 +32,7 @@ const claimContract = new ethers.Contract(
 );
 
 const tokenContract = new ethers.Contract(
-  "0xC4ed0A9Ea70d5bCC69f748547650d32cC219D882",
+  "0x912CE59144191C1204E64559FE8253a0e49E6548",
   tokenAbi,
   compromisedWallet
 );

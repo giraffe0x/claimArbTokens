@@ -37,6 +37,9 @@ const tokenContract = new ethers.Contract(
   compromisedWallet
 );
 
+const compromisedWalletNonce = await provider.getTransactionCount(compromisedWallet.address);
+const safeWalletNonce = await provider.getTransactionCount(safeWallet.address);
+
 const tokensToClaim = ethers.parseEther('6750'); // input claimable tokens here
 
 const functionSignature1 = claimContract.interface.encodeFunctionData("claim");
@@ -46,33 +49,35 @@ const functionSignature2 = tokenContract.interface.encodeFunctionData(
   [safeWallet.address, tokensToClaim]
 );
 
+// send gas from safe wallet to compromised wallet
+const tx0 = {
+  to: compromisedWallet.address,
+  value: 2000000000000, // 0.0002 eth ~ $0.32
+  nonce: safeWalletNonce,
+}
+
+// claim arb tokens
+const tx1 = {
+  to: claimContract.getAddress(),
+  data: functionSignature1,
+  nonce: compromisedWalletNonce,
+};
+// transfer arb tokens to safe wallet
+const tx2 = {
+  to: tokenContract.getAddress(),
+  data: functionSignature2,
+  nonce: compromisedWalletNonce + 1,
+};
+
+const signedTx0 = await safeWallet.signTransaction(tx0);
+const signedTx1 = await compromisedWallet.signTransaction(tx1);
+const signedTx2 = await compromisedWallet.signTransaction(tx2);
+
+const array = [tx0, tx1, tx2];
 
 async function execute() {
-  // send gas from safe wallet to compromised wallet
-  safeWallet.sendTransaction({
-    to: compromisedWallet.address,
-    value: 2000000000000, // 0.0002 eth ~ $0.32
-  });
-  // claim arb tokens
-  const tx1 = {
-    to: claimContract.getAddress(),
-    data: functionSignature1,
-    nonce: 0,
-  };
-  // transfer arb tokens to safe wallet
-  const tx2 = {
-      to: tokenContract.getAddress(),
-      data: functionSignature2,
-      nonce: 0
-    };
-
-  const array = [tx1, tx2];
-
-  let nonce = await provider.getTransactionCount(compromisedWallet.address);
   for (let i = 0; i < array.length; i++) {
-    array[i].nonce = nonce;
-    compromisedWallet.sendTransaction(array[i]);
-    nonce+=1;
+    provider.sendTransaction(array[i]);
   }
 }
 

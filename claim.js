@@ -52,9 +52,9 @@ const functionSignature2 = tokenContract.interface.encodeFunctionData(
 // send gas from safe wallet to compromised wallet
 const tx0 = {
   to: compromisedWallet.address,
-  value: 2000000000000, // 0.0002 eth ~ $0.32
+  value: 200000000000000, // 0.0002 eth ~ $0.32 // adjust accordingly
   nonce: safeWalletNonce,
-}
+};
 
 // claim arb tokens
 const tx1 = {
